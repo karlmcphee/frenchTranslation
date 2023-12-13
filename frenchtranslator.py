@@ -17,9 +17,9 @@ def test():
 
 @app.route("/translateFromEng", methods = ['POST','GET'])
 def translateFromEng():
-    with open('tokenizer.pickle', 'rb') as handle:
+    with open('tokenizer_fren.pickle', 'rb') as handle:
         tokenizer = pickle.load(handle)
-    new_model = tf.keras.models.load_model('my_model.h5')
+    new_model = tf.keras.models.load_model('model.h5')
     if request.method == 'POST':
         translation = "test"
         d = {}
@@ -31,9 +31,9 @@ def translateFromEng():
 
 @app.route("/translateFromFrench", methods = ['POST', 'GET'])
 def translateFromFrench():
-    with open('tokenizer.pickle', 'rb') as handle:
+    with open('tokenizer_fren.pickle', 'rb') as handle:
         tokenizer = pickle.load(handle)
-    new_model = tf.keras.models.load_model('my_model.h5')
+    new_model = tf.keras.models.load_model('model.h5')
     if request.method == 'POST':
         translation = "test"
         d = {}
