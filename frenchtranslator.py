@@ -21,7 +21,7 @@ def translateFromEng():
         tokenizer = pickle.load(handle)
     new_model = tf.keras.models.load_model('model.h5')
     d = {}
-    d["Translation"] = translation
+    d["Translation"] = "translation"
     d["UnknownWords"] = False
     if request.method == 'POST':
         return d
@@ -34,7 +34,7 @@ def translateFromFrench():
         tokenizer = pickle.load(handle)
     new_model = tf.keras.models.load_model('model.h5')
     d = {}
-    d["Translation"] = translation
+    d["Translation"] = "translation"
     d["UnknownWords"] = False
     if request.method == 'POST':
         return d
