@@ -2,6 +2,7 @@ import tensorflow as tf
 import pickle
 import werkzeug
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+import sys
 
 from flask import Flask, request
 
@@ -50,6 +51,7 @@ def translateFromFrench():
     if request.method == 'POST':
         for key in request.args:
             print(key)
+	sys.stdout.flush()
         #tokens = tokenizer.texts_to_sequences(phrase)
         #padded_tokens = pad_sequences(tokens)
         return d
