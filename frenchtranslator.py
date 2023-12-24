@@ -25,7 +25,7 @@ def test():
 def translateFromEng():
     with open('tokenizer_eng.pickle', 'rb') as handle:
         tokenizer = pickle.load(handle)
-    new_model = tf.keras.models.load_model('model.h5')
+    new_model = tf.keras.models.load_model('my_model.h5')
     d = {}
     d["Translation"] = "translation"
     d["UnknownWords"] = False
