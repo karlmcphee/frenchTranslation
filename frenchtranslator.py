@@ -31,10 +31,10 @@ def translateFromEng():
     d["UnknownWords"] = False
     if request.method == 'POST':
         phrase = request.args('phrase')
-        tokens = tokenizer.texts_to_sequences(phrase)
-        padded_tokens = pad_sequences(tokens)
-        if len(tokens) == 0:
-            d["UnknownWords"] = True
+        #tokens = tokenizer.texts_to_sequences(phrase)
+        #padded_tokens = pad_sequences(tokens)
+        #if len(tokens) == 0:
+        #    d["UnknownWords"] = True
         return d
     if request.method == 'GET':
         return d
