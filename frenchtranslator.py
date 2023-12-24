@@ -51,7 +51,7 @@ def translateFromFrench():
     if request.method == 'POST':
         for key in request.args:
             print(key)
-    sys.stdout.flush()
+        sys.stdout.flush()
         #tokens = tokenizer.texts_to_sequences(phrase)
         #padded_tokens = pad_sequences(tokens)
         return d
