@@ -49,10 +49,10 @@ def translateFromFrench():
     d["Translation"] = "translation"
     d["UnknownWords"] = False
     if request.method == 'POST':
-        n = request.args['request']['phrase']
+        phrase = request.args['request']['phrase']
         sys.stdout.flush()
-        #tokens = tokenizer.texts_to_sequences(phrase)
-        #padded_tokens = pad_sequences(tokens)
+        tokens = tokenizer.texts_to_sequences(phrase)
+        padded_tokens = pad_sequences(tokens)
         return d
     if request.method == 'GET':
         return d
