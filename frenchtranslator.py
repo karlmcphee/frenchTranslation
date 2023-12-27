@@ -42,17 +42,32 @@ def translateFromEng():
 
 @app.route("/translateFromFrench", methods = ['POST', 'GET'])
 def translateFromFrench():
-    with open('tokenizer_fren.pickle', 'rb') as handle:
-        tokenizer = pickle.load(handle)
-    new_model = tf.keras.models.load_model('model.h5')
     d = {}
     d["Translation"] = "translation"
     d["UnknownWords"] = False
     if request.method == 'POST':
+        filehandler_fr = open('tokenizer_fren.pickle', 'rb')
+        fren_tokenizer = pickle.load(filehandler_fr)
+        model = tf.keras.models.load_model('model.h5')
         phrase = request.args['request']['phrase']
         sys.stdout.flush()
         tokens = tokenizer.texts_to_sequences(phrase)
         padded_tokens = pad_sequences(tokens)
+        pred = model.predict(padded_tokens)
+        prediction = np.argmax([pred], axis=1)
+        filehandler_eng = open('tokenizer_eng.pickle', 'rb')
+        eng_tokenizer = pickle.load(filehandler_eng)
+        resp = ""
+        for i in range(len(prediction[0])):
+            wordchoice = ""
+            for word, index in eng_tokenizer.word_index.items():
+                if index == n:
+                    wordchoice = word
+                    break
+            resp += wordchoice
+        d["Translation"] = resp
+        filehandler_fr.close()
+        filehandler_eng.close()
         return d
     if request.method == 'GET':
         return d
