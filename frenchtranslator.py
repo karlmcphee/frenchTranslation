@@ -30,7 +30,7 @@ def translateFromEng():
     if request.method == 'POST':
         filehandler_fr = open('tokenizer_eng.pickle', 'rb')
         fren_tokenizer = pickle.load(filehandler_fr)
-        model = tf.keras.models.load_model('model.h5')
+        model = tf.keras.models.load_model('my_model.h5')
         phrase = request.args['request']['phrase']
         sys.stdout.flush()
         tokens = tokenizer.texts_to_sequences(phrase)
@@ -62,7 +62,7 @@ def translateFromFrench():
     if request.method == 'POST':
         filehandler_fr = open('tokenizer_fren.pickle', 'rb')
         fren_tokenizer = pickle.load(filehandler_fr)
-        model = tf.keras.models.load_model('model.h5')
+        model = tf.keras.models.load_model('my_model.h5')
         phrase = request.args['request']['phrase']
         sys.stdout.flush()
         tokens = tokenizer.texts_to_sequences(phrase)
