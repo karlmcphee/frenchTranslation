@@ -32,7 +32,7 @@ def translateFromEng():
         eng_tokenizer = pickle.load(filehandler_eng)
         model = tf.keras.models.load_model('my_model.h5')
         data = request.json
-        phrase2 = data.get('request')
+        phrase2 = data.get('request')['phrase']
         #phrase = data['request']['phrase']
         d["Translation"] = str(phrase2)
         sys.stdout.flush()
