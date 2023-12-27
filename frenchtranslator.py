@@ -31,7 +31,7 @@ def translateFromEng():
         filehandler_eng = open('tokenizer_eng.pickle', 'rb')
         eng_tokenizer = pickle.load(filehandler_eng)
         model = tf.keras.models.load_model('my_model.h5')
-        phrase = request.args['request']['phrase']
+        #phrase = request.args['request']['phrase']
         sys.stdout.flush()
         #tokens = tokenizer.texts_to_sequences(phrase)
         #padded_tokens = pad_sequences(tokens)
