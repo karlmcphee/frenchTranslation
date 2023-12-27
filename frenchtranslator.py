@@ -28,8 +28,8 @@ def translateFromEng():
     d["Translation"] = "translation"
     d["UnknownWords"] = False
     if request.method == 'POST':
-        filehandler_fr = open('tokenizer_eng.pickle', 'rb')
-        fren_tokenizer = pickle.load(filehandler_fr)
+        filehandler_eng = open('tokenizer_eng.pickle', 'rb')
+        eng_tokenizer = pickle.load(filehandler_fr)
         model = tf.keras.models.load_model('my_model.h5')
         phrase = request.args['request']['phrase']
         sys.stdout.flush()
@@ -37,16 +37,17 @@ def translateFromEng():
         padded_tokens = pad_sequences(tokens)
         pred = model.predict(padded_tokens)
         prediction = np.argmax([pred], axis=1)
-        filehandler_eng = open('tokenizer_fren.pickle', 'rb')
-        eng_tokenizer = pickle.load(filehandler_eng)
+        filehandler_fr = open('tokenizer_fren.pickle', 'rb')
+        fr_tokenizer = pickle.load(filehandler_eng)
         resp = ""
         for i in range(len(prediction[0])):
             wordchoice = ""
-            for word, index in eng_tokenizer.word_index.items():
+            for word, index in fr_tokenizer.word_index.items():
                 if index == n:
                     wordchoice = word
                     break
             resp += wordchoice
+        resp += " test"
         d["Translation"] = resp
         filehandler_fr.close()
         filehandler_eng.close()
