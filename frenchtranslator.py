@@ -32,11 +32,11 @@ def translateFromEng():
         eng_tokenizer = pickle.load(filehandler_eng)
         model = tf.keras.models.load_model('my_model.h5')
         data = request.json
-        phrase = data.get('phrase')
-        phrase2 = data.get('request')
+        phrase2 = data.get('phrase')
+        phrase = data['request']['phrase']
         d["Translation"] = str(phrase) + str(phrase2)
         sys.stdout.flush()
-        #tokens = tokenizer.texts_to_sequences(phrase)
+        tokens = tokenizer.texts_to_sequences(phrase)
         #padded_tokens = pad_sequences(tokens)
         #pred = model.predict(padded_tokens)
         #prediction = np.argmax([pred], axis=1)
