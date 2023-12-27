@@ -35,20 +35,20 @@ def translateFromEng():
         sys.stdout.flush()
         tokens = tokenizer.texts_to_sequences(phrase)
         padded_tokens = pad_sequences(tokens)
-        pred = model.predict(padded_tokens)
-        prediction = np.argmax([pred], axis=1)
-        filehandler_fr = open('tokenizer_fren.pickle', 'rb')
-        fr_tokenizer = pickle.load(filehandler_eng)
-        resp = ""
-        for i in range(len(prediction[0])):
-            wordchoice = ""
-            for word, index in fr_tokenizer.word_index.items():
-                if index == n:
-                    wordchoice = word
-                    break
-            resp += wordchoice
-        resp += " test"
-        d["Translation"] = resp
+        #pred = model.predict(padded_tokens)
+        #prediction = np.argmax([pred], axis=1)
+        #filehandler_fr = open('tokenizer_fren.pickle', 'rb')
+        #fr_tokenizer = pickle.load(filehandler_eng)
+        #resp = ""
+        #for i in range(len(prediction[0])):
+        #    wordchoice = ""
+        #    for word, index in fr_tokenizer.word_index.items():
+        #        if index == n:
+        #            wordchoice = word
+        #            break
+        #    resp += wordchoice
+        #resp += " test"
+        #d["Translation"] = resp
         filehandler_fr.close()
         filehandler_eng.close()
         return d
