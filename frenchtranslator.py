@@ -4,6 +4,7 @@ import werkzeug
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import sys
 import numpy as np
+from tensorflow.keras.layers import Embedding, Dense, Add, LayerNormalization, MultiHeadAttention
 
 from flask import Flask, request
 
@@ -44,7 +45,7 @@ class PositionalEmbedding(tf.keras.layers.Layer):
         })
         return config
 
-class Encoder(layers.Layer):
+class Encoder(tf.keras.layers.Layer):
     def __init__(self, embedding_dim, num_heads, dense_dim, **kwargs):
         super(Encoder, self).__init__(**kwargs)
         self.embedding_dim = embedding_dim
@@ -121,12 +122,6 @@ def handle_bad_request(e):
 def hello_world():
     return "Hello, World!"
 
-@app.route("/test")
-def test():
-    d = {}
-    d["test1"] = "test2"
-    return d
-
 def translate(input_sentence, tokenizer1, tokenizer2, transformer):
     word2idx_outputs = tokenizer2.word_index
     idx2word_trans = {v: k for k, v in word2idx_outputs.items()}
@@ -156,7 +151,7 @@ def translateFromEng():
     d = {}
     d["Translation"] = "translation"
     d["UnknownWords"] = False
-    if request.method == 'GET':
+    if request.method == 'POST':
         filehandler_eng = open('tokenizer_eng2.pickle', 'rb')
         eng_tokenizer = pickle.load(filehandler_eng)
         filehandler_fr = open('tokenizer_fra2.pickle', 'rb')
@@ -164,15 +159,15 @@ def translateFromEng():
         model = tf.keras.models.load_model('fr_model1.h5',  custom_objects={'MyLayers>PositionalEmbedding': PositionalEmbedding,                         
                                                                     'MyLayers>Encoder': Encoder,
                                                                     'MyLayers>Decoder': Decoder })
-        #data = request.json
-        #phrase2 = data.get('request')['phrase']
-        #phrase = data['request']['phrase']
-        #d["Translation"] = str(phrase2)
+        data = request.json
+        phrase2 = data.get('request')['phrase']
+        phrase = data['request']['phrase']
+        d["Translation"] = str(phrase2)
         
         #sys.stdout.flush()
-        phrase = "Where are we going"
+        #phrase = "Where are we going"
         translation = translate(phrase, eng_tokenizer, fr_tokenizer, model)
-        d["Translation2"] = np.array2string(translation)
+        d["Translation2"] = translation
         return d
         tokens = eng_tokenizer.texts_to_sequences(phrase)
         padded_tokens = pad_sequences(tokens)
