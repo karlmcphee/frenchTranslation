@@ -126,25 +126,26 @@ def translate(input_sentence, tokenizer1, tokenizer2, transformer):
     word2idx_outputs = tokenizer2.word_index
     idx2word_trans = {v: k for k, v in word2idx_outputs.items()}
     word = ""
+    final_sentence = ""
     sentence = tokenizer1.texts_to_sequences([input_sentence])
     sentence = pad_sequences(sentence, maxlen=20, padding='post')
     decoded_sentence = "[start]"
     for i in range(20):
         target = tokenizer2.texts_to_sequences([decoded_sentence])
         target = pad_sequences(target, maxlen=20, padding='post')[:, :-1]
-        print(target)
         predictions = transformer([sentence, target])
         # ops.argmax(predictions[0, i, :]) is not a concrete value for jax here
         idx = np.argmax(predictions[0, i, :])
         if idx > 0:
             word = idx2word_trans[idx]
             decoded_sentence+= " " + word
+            if word != "[end]":
+                final_sentence += word + " "
         else:
-            decoded_sentence += " test"
-
+            decoded_sentence += " unknown"
         if word == "[end]" and i > 1:
             break
-    return decoded_sentence
+    return final_sentence
 
 @app.route("/translateFromEng", methods = ['POST','GET'])
 def translateFromEng():
