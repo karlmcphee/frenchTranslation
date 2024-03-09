@@ -27,7 +27,6 @@ class PositionalEmbedding(tf.keras.layers.Layer):
 
     def call(self, inputs):
         length = tf.shape(inputs)[-1]
-        print("hi ", tf.shape(inputs)[-1])
         positions = tf.range(start = 0, limit=length, delta=1)
         tokens = self.base_embeddings(inputs)
         positions = self.position_embeddings(positions)
@@ -134,16 +133,12 @@ def translate(input_sentence, tokenizer1, tokenizer2, transformer):
         target = tokenizer2.texts_to_sequences([decoded_sentence])
         target = pad_sequences(target, maxlen=20, padding='post')[:, :-1]
         predictions = transformer([sentence, target])
-        # ops.argmax(predictions[0, i, :]) is not a concrete value for jax here
         idx = np.argmax(predictions[0, i, :])
-        if idx > 0:
-            word = idx2word_trans[idx]
-            decoded_sentence+= " " + word
-            if word != "[end]":
-                final_sentence += word + " "
-        else:
-            decoded_sentence += " unknown"
-        if word == "[end]" and i > 1:
+        word = idx2word_trans[idx]
+        decoded_sentence+= " " + word
+        if word != "[end]":
+            final_sentence += word + " "
+        if word == "[end]" and i >= 1:
             break
     return final_sentence
 
@@ -151,11 +146,11 @@ def translate(input_sentence, tokenizer1, tokenizer2, transformer):
 def translateFromEng():
     d = {}
     d["Translation"] = "translation"
-    d["UnknownWords"] = False
+    d["Error"] = False
     if request.method == 'POST':
-        filehandler_eng = open('tokenizer_eng2.pickle', 'rb')
+        filehandler_eng = open('tokenizer_eng.pickle', 'rb')
         eng_tokenizer = pickle.load(filehandler_eng)
-        filehandler_fr = open('tokenizer_fra2.pickle', 'rb')
+        filehandler_fr = open('tokenizer_fra.pickle', 'rb')
         fr_tokenizer = pickle.load(filehandler_fr)
         model = tf.keras.models.load_model('fr_model1.h5',  custom_objects={'MyLayers>PositionalEmbedding': PositionalEmbedding,                         
                                                                     'MyLayers>Encoder': Encoder,
@@ -163,28 +158,9 @@ def translateFromEng():
         data = request.json
         phrase2 = data.get('request')['phrase']
         phrase = data['request']['phrase']
-        d["Translation"] = str(phrase2)
-        
-        #sys.stdout.flush()
-        #phrase = "Where are we going"
         translation = translate(phrase, eng_tokenizer, fr_tokenizer, model)
-        d["Translation2"] = translation
-        return d
-        tokens = eng_tokenizer.texts_to_sequences(phrase)
-        padded_tokens = pad_sequences(tokens)
-        pred = model.predict(padded_tokens)
-        #prediction = np.argmax([pred], axis=1)
-        #resp = ""
-        #for i in range(len(prediction[0])):
-        #    wordchoice = ""
-        #    for word, index in fr_tokenizer.word_index.items():
-        #        if index == n:
-        #            wordchoice = word
-        #            break
-        #    resp += wordchoice
-        #resp += " test"
-        #d["Translation"] = resp
-        #filehandler_fr.close()
+        d["Translation"] = translation
+        filehandler_fr.close()
         filehandler_eng.close()
         return d
     if request.method == 'GET':
@@ -192,30 +168,23 @@ def translateFromEng():
 
 @app.route("/translateFromFrench", methods = ['POST', 'GET'])
 def translateFromFrench():
+def translateFromEng():
     d = {}
     d["Translation"] = "translation"
-    d["UnknownWords"] = False
+    d["Error"] = False
     if request.method == 'POST':
-        filehandler_fr = open('tokenizer_fr.pickle', 'rb')
-        fren_tokenizer = pickle.load(filehandler_fr)
-        model = tf.keras.models.load_model('my_model.h5')
-        phrase = request.args['request']['phrase']
-        sys.stdout.flush()
-        tokens = tokenizer.texts_to_sequences(phrase)
-        padded_tokens = pad_sequences(tokens)
-        pred = model.predict(padded_tokens)
-        prediction = np.argmax([pred], axis=1)
-        filehandler_eng = open('tokenizer_eng.pickle', 'rb')
+        filehandler_eng = open('tokenizer_eng2.pickle', 'rb')
         eng_tokenizer = pickle.load(filehandler_eng)
-        resp = ""
-        for i in range(len(prediction[0])):
-            wordchoice = ""
-            for word, index in eng_tokenizer.word_index.items():
-                if index == n:
-                    wordchoice = word
-                    break
-            resp += wordchoice
-        d["Translation"] = resp
+        filehandler_fr = open('tokenizer_fra2.pickle', 'rb')
+        fr_tokenizer = pickle.load(filehandler_fr)
+        model = tf.keras.models.load_model('eng_model.h5',  custom_objects={'MyLayers>PositionalEmbedding': PositionalEmbedding,                         
+                                                                    'MyLayers>Encoder': Encoder,
+                                                                    'MyLayers>Decoder': Decoder })
+        data = request.json
+        phrase2 = data.get('request')['phrase']
+        phrase = data['request']['phrase']
+        translation = translate(phrase, fra_tokenizer, eng_tokenizer, model)
+        d["Translation"] = translation
         filehandler_fr.close()
         filehandler_eng.close()
         return d
