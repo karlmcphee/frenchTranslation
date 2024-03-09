@@ -168,7 +168,6 @@ def translateFromEng():
 
 @app.route("/translateFromFrench", methods = ['POST', 'GET'])
 def translateFromFrench():
-def translateFromEng():
     d = {}
     d["Translation"] = "translation"
     d["Error"] = False
