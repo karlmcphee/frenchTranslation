@@ -175,7 +175,7 @@ def translateFromFrench():
         filehandler_eng = open('tokenizer_eng2.pickle', 'rb')
         eng_tokenizer = pickle.load(filehandler_eng)
         filehandler_fr = open('tokenizer_fra2.pickle', 'rb')
-        fr_tokenizer = pickle.load(filehandler_fr)
+        fra_tokenizer = pickle.load(filehandler_fr)
         model = tf.keras.models.load_model('eng_model.h5',  custom_objects={'MyLayers>PositionalEmbedding': PositionalEmbedding,                         
                                                                     'MyLayers>Encoder': Encoder,
                                                                     'MyLayers>Decoder': Decoder })
